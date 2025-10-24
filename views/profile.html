@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card profile-card">
+            <div class="profile-header">
+                <h1>Your Profile</h1>
+                <button id="logoutBtn" class="btn-secondary">Logout</button>
+            </div>
+            
+            <div class="profile-picture-section">
+                <div class="profile-picture-container">
+                    <img id="profilePicture" src="/images/default-avatar.png" alt="Profile Picture" class="profile-picture">
+                    <div class="upload-overlay">
+                        <label for="fileInput" class="upload-label">
+                            <span>📷 Change Photo</span>
+                        </label>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="timezone">Timezone:</label>
+                    <select id="timezone" name="timezone" required>
+                        <option value="">-- Choose a timezone --</option>
+                        <optgroup label="North America">
+                            <option value="America/New_York">Eastern Time (ET)</option>
+                            <option value="America/Chicago">Central Time (CT)</option>
+                            <option value="America/Denver">Mountain Time (MT)</option>
+                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                            <option value="America/Anchorage">Alaska Time (AKT)</option>
+                            <option value="Pacific/Honolulu">Hawaii Time (HT)</option>
+                        </optgroup>
+                        <optgroup label="Europe">
+                            <option value="Europe/London">London (GMT/BST)</option>
+                            <option value="Europe/Paris">Paris (CET/CEST)</option>
+                            <option value="Europe/Berlin">Berlin (CET/CEST)</option>
+                            <option value="Europe/Rome">Rome (CET/CEST)</option>
+                            <option value="Europe/Madrid">Madrid (CET/CEST)</option>
+                            <option value="Europe/Amsterdam">Amsterdam (CET/CEST)</option>
+                            <option value="Europe/Brussels">Brussels (CET/CEST)</option>
+                            <option value="Europe/Vienna">Vienna (CET/CEST)</option>
+                        </optgroup>
+                        <optgroup label="Asia">
+                            <option value="Asia/Dubai">Dubai (GST)</option>
+                            <option value="Asia/Kolkata">India (IST)</option>
+                            <option value="Asia/Bangkok">Bangkok (ICT)</option>
+                            <option value="Asia/Singapore">Singapore (SGT)</option>
+                            <option value="Asia/Hong_Kong">Hong Kong (HKT)</option>
+                            <option value="Asia/Tokyo">Tokyo (JST)</option>
+                            <option value="Asia/Seoul">Seoul (KST)</option>
+                            <option value="Asia/Shanghai">Shanghai (CST)</option>
+                        </optgroup>
+                        <optgroup label="Australia & Pacific">
+                            <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
+                            <option value="Australia/Melbourne">Melbourne (AEDT/AEST)</option>
+                            <option value="Australia/Brisbane">Brisbane (AEST)</option>
+                            <option value="Australia/Perth">Perth (AWST)</option>
+                            <option value="Pacific/Auckland">Auckland (NZDT/NZST)</option>
+                        </optgroup>
+                        <optgroup label="South America">
+                            <option value="America/Sao_Paulo">São Paulo (BRT)</option>
+                            <option value="America/Buenos_Aires">Buenos Aires (ART)</option>
+                            <option value="America/Santiago">Santiago (CLT)</option>
+                        </optgroup>
+                        <optgroup label="Africa">
+                            <option value="Africa/Cairo">Cairo (EET)</option>
+                            <option value="Africa/Johannesburg">Johannesburg (SAST)</option>
+                            <option value="Africa/Lagos">Lagos (WAT)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">Update Profile</button>
+            </form>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script src="/js/profile.js"></script>
+</body>
+</html>
