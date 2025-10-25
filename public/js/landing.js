@@ -1,31 +1,28 @@
-document.getElementById('signinForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+// Sign In button - redirect to sign-in page
+document.getElementById('signInBtn').addEventListener('click', () => {
+    window.location.href = '/signin';
+});
+
+// Calculate my time button - typewriter effect
+document.getElementById('calculateTimeBtn').addEventListener('click', () => {
+    const messageBox = document.getElementById('messageBox');
+    const message = "Hello! I'm ChatGPT. How can I assist you?";
     
-    const timezone = document.getElementById('timezone').value;
+    // Clear previous message and show the box
+    messageBox.textContent = '';
+    messageBox.classList.add('visible');
     
-    if (!timezone) {
-        alert('Please select a timezone');
-        return;
-    }
+    // Typewriter effect - one character at a time
+    let index = 0;
+    const typingSpeed = 50; // milliseconds per character
     
-    try {
-        const response = await fetch('/signin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ timezone })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            window.location.href = '/profile';
-        } else {
-            alert('Sign in failed. Please try again.');
+    function typeCharacter() {
+        if (index < message.length) {
+            messageBox.textContent += message[index];
+            index++;
+            setTimeout(typeCharacter, typingSpeed);
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
     }
+    
+    typeCharacter();
 });
