@@ -126,5 +126,10 @@ function showMessage(text, type) {
     }, 3000);
 }
 
+//back to homepage button
+document.getElementById('backToHomeBtn').addEventListener('click', () => {
+    window.location.href = '/';
+});
+
 // Load user data when page loads
 loadUserData();

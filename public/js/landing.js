@@ -1,7 +1,23 @@
 // Sign In button - redirect to sign-in page
-document.getElementById('signInBtn').addEventListener('click', () => {
-    window.location.href = '/signin';
-});
+
+async function HideSignInButtonIfLoggedIn() {
+    const response = await fetch('/api/user');
+
+    if (response.status === 200) {
+        const userData = await response.json();
+
+        document.getElementById('signInBtn').textContent = 'Go to Profile';
+        document.getElementById('signInBtn').onclick = () => {
+            window.location.href = '/profile';
+        }
+        document.getElementById('welcomeMsg').textContent = `Welcome back ${userData.username}!`;
+    } else {
+        document.getElementById('signInBtn').onclick = () => {
+            window.location.href = '/signin';
+        }
+        document.getElementById('welcomeMsg').style.display = 'none';
+    }
+}
 
 // Calculate my time button - typewriter effect
 document.getElementById('calculateTimeBtn').addEventListener('click', () => {
@@ -26,3 +42,5 @@ document.getElementById('calculateTimeBtn').addEventListener('click', () => {
     
     typeCharacter();
 });
+
+HideSignInButtonIfLoggedIn();
