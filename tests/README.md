@@ -14,7 +14,6 @@ tests/
 │   └── validation.test.js       # Input validation functions
 └── integration/                  # Integration tests
     ├── api.test.js              # API endpoint tests
-    └── security.test.js         # Security vulnerability tests
 ```
 
 ## Prerequisites
@@ -78,18 +77,9 @@ Tests for all API endpoints:
 - `POST /api/user/update` - Update profile
 - `POST /logout` - Logout functionality
 
-#### Security Tests (`tests/integration/security.test.js`)
-- SQL injection prevention
-- XSS (Cross-Site Scripting) prevention
-- Password security (no hash leakage)
-- Input validation
-- Session isolation
-- Error message consistency
-
 ## Test Coverage Goals
 
 - **API Endpoints**: 100% coverage of all routes
-- **Security**: All common vulnerabilities tested
 - **Validation**: All input validation paths covered
 - **Edge Cases**: Boundary conditions and error handling
 
