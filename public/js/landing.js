@@ -19,10 +19,10 @@ async function HideSignInButtonIfLoggedIn() {
     }
 }
 
-// Calculate my time button - typewriter effect
+// Calculate my time button - chat gpt typewriter effect
 document.getElementById('calculateTimeBtn').addEventListener('click', () => {
     const messageBox = document.getElementById('messageBox');
-    const message = "Hello! I'm ChatGPT. How can I assist you?";
+    const message = "Hello! I'm ChatGPT. How can I assist you today?";
     
     // Clear previous message and show the box
     messageBox.textContent = '';
@@ -30,7 +30,7 @@ document.getElementById('calculateTimeBtn').addEventListener('click', () => {
     
     // Typewriter effect - one character at a time
     let index = 0;
-    const typingSpeed = 50; // milliseconds per character
+    const typingSpeed = 50; // ms per character
     
     function typeCharacter() {
         if (index < message.length) {

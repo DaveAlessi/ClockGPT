@@ -9,7 +9,7 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const PORT = 3000;
 
-// Configure file upload storage (MOVE THIS UP - before routes)
+// Configure file upload storage 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'public/images/');
@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Middleware (MOVE THIS UP - before routes)
+// Middleware 
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
