@@ -1,6 +1,6 @@
 # Timezone Test Application
 
-A simple local web application for testing timezone functionality. This application runs entirely on your local machine without any external services.
+The next era of AI powered time keeping (just kidding). This is a basic website meant for security testing, namely approaches to finding and resolving security vulnerabilities. This project has intentional security vulnerabilities included, use at your own risk. 
 
 ## Features
 
@@ -10,7 +10,6 @@ A simple local web application for testing timezone functionality. This applicat
   - Change your timezone
   - Upload a profile picture
 - Session-based authentication
-- In-memory data storage (resets when server restarts)
 
 ## Prerequisites
 
@@ -55,25 +54,6 @@ The application will start on **http://localhost:3000**
 5. Click "Update Profile" to save your changes
 6. Click "Logout" to return to the landing page
 
-## Project Structure
-
-```
-timezone-app/
-├── server.js                 # Express server with routes
-├── package.json              # Project dependencies
-├── views/
-│   ├── landing.html          # Landing page
-│   └── profile.html          # Profile page
-├── public/
-│   ├── css/
-│   │   └── style.css         # Styles for all pages
-│   ├── js/
-│   │   ├── landing.js        # Landing page JavaScript
-│   │   └── profile.js        # Profile page JavaScript
-│   └── images/               # Uploaded images and default avatar
-│       └── default-avatar.png
-└── README.md                 # This file
-```
 
 ## Technical Details
 
@@ -85,9 +65,6 @@ timezone-app/
 
 ## Important Notes
 
-- This is a **test application** - data is stored in memory and will be lost when the server restarts
-- No database is used - perfect for local testing
-- Sessions are stored in memory
 - Profile pictures are saved to `public/images/` directory
 - Maximum upload size: 5MB per image
 
@@ -113,13 +90,4 @@ npm --version
 ### Session not working
 Make sure cookies are enabled in your browser.
 
-## Future Enhancements
 
-For a production application, consider adding:
-- Database integration (MongoDB, PostgreSQL, etc.)
-- User authentication with passwords
-- Persistent session storage
-- Image optimization
-- Form validation
-- HTTPS support
-- Environment variables for configuration
