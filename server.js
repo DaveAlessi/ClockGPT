@@ -30,8 +30,40 @@ app.use(session({
   secret: 'timezone-test-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
+  cookie: { 
+    secure: false, // Set to true if using HTTPS
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
+
+// CSRF protection middleware using Origin/Referer validation for state-changing requests
+function csrfProtection(req, res, next) {
+  const unsafeMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
+  if (!unsafeMethods.includes(req.method)) return next();
+
+  const origin = req.headers.origin;
+  const referer = req.headers.referer;
+  const host = req.headers.host;
+
+  try {
+    if (origin) {
+      const originHost = new URL(origin).host;
+      if (originHost === host) return next();
+    }
+  } catch (_) {}
+
+  try {
+    if (referer) {
+      const refererHost = new URL(referer).host;
+      if (refererHost === host) return next();
+    }
+  } catch (_) {}
+
+  return res.status(403).json({ error: 'CSRF validation failed' });
+}
+
+app.use(csrfProtection);
 
 // Database setup
 const db = new sqlite3.Database('./users.db', (err) => {
@@ -199,8 +231,9 @@ app.post('/api/user/upload-picture', upload.single('profilePicture'), (req, res)
 
 // Logout
 app.post('/logout', (req, res) => {
-    req.session.destroy();
-    res.json({ success: true });
+    req.session.destroy(() => {
+      res.json({ success: true });
+    });
 });
 
 // Start server
