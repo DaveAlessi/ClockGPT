@@ -30,8 +30,35 @@ app.use(session({
   secret: 'timezone-test-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // true when using HTTPS in production
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
+
+// Simple CSRF protection middleware using Origin/Referer validation for state-changing requests
+function csrfProtection(req, res, next) {
+  const unsafeMethod = /^(POST|PUT|DELETE|PATCH)$/i.test(req.method);
+  if (!unsafeMethod) return next();
+
+  const host = req.headers.host;
+  const expectedOrigin = `${req.protocol}://${host}`;
+
+  const origin = req.headers.origin;
+  if (origin && origin === expectedOrigin) {
+    return next();
+  }
+
+  const referer = req.headers.referer;
+  if (referer && referer.startsWith(expectedOrigin + '/')) {
+    return next();
+  }
+
+  return res.status(403).json({ error: 'Invalid CSRF token' });
+}
+
+app.use(csrfProtection);
 
 // Database setup
 const db = new sqlite3.Database('./users.db', (err) => {
@@ -199,8 +226,9 @@ app.post('/api/user/upload-picture', upload.single('profilePicture'), (req, res)
 
 // Logout
 app.post('/logout', (req, res) => {
-    req.session.destroy();
-    res.json({ success: true });
+    req.session.destroy(() => {
+      res.json({ success: true });
+    });
 });
 
 // Start server
