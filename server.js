@@ -8,6 +8,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 const PORT = 3000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Configure file upload storage 
 const storage = multer.diskStorage({
@@ -30,8 +31,39 @@ app.use(session({
   secret: 'timezone-test-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
+  cookie: {
+    secure: isProduction, // true when using HTTPS in production
+    httpOnly: true,       // mitigate XSS stealing cookies
+    sameSite: 'lax'       // mitigate CSRF for cross-site requests
+  }
 }));
+
+// Basic CSRF protection: verify same-origin for state-changing requests
+app.use((req, res, next) => {
+  const method = req.method.toUpperCase();
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+    const origin = req.get('Origin');
+    const referer = req.get('Referer');
+    const expectedOrigin = req.protocol + '://' + req.get('Host');
+
+    if (origin && origin !== expectedOrigin) {
+      return res.status(403).json({ error: 'Invalid origin' });
+    }
+
+    if (!origin && referer) {
+      try {
+        const refOrigin = new URL(referer).origin;
+        if (refOrigin !== expectedOrigin) {
+          return res.status(403).json({ error: 'Invalid referer' });
+        }
+      } catch (e) {
+        // If Referer is malformed, reject to be safe
+        return res.status(403).json({ error: 'Invalid referer' });
+      }
+    }
+  }
+  next();
+});
 
 // Database setup
 const db = new sqlite3.Database('./users.db', (err) => {
