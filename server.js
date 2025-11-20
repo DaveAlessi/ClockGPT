@@ -30,8 +30,47 @@ app.use(session({
   secret: 'timezone-test-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    httpOnly: true,
+    sameSite: 'lax' // Mitigate CSRF by restricting cross-site cookie sending on unsafe methods
+  }
 }));
+
+// Simple CSRF protection: verify same-origin on state-changing requests
+function isSameOrigin(req) {
+  const origin = req.get('origin');
+  const host = req.get('host');
+  if (origin) {
+    try {
+      const originHost = new URL(origin).host;
+      return originHost === host;
+    } catch (_) {
+      return false;
+    }
+  }
+  const referer = req.get('referer');
+  if (referer) {
+    try {
+      const refererHost = new URL(referer).host;
+      return refererHost === host;
+    } catch (_) {
+      return false;
+    }
+  }
+  // Allow if headers are absent; SameSite=Lax still mitigates CSRF for cookies
+  return true;
+}
+
+function csrfProtection(req, res, next) {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
+  if (!isSameOrigin(req)) {
+    return res.status(403).json({ error: 'CSRF validation failed' });
+  }
+  next();
+}
+
+app.use(csrfProtection);
 
 // Database setup
 const db = new sqlite3.Database('./users.db', (err) => {
@@ -199,8 +238,9 @@ app.post('/api/user/upload-picture', upload.single('profilePicture'), (req, res)
 
 // Logout
 app.post('/logout', (req, res) => {
-    req.session.destroy();
-    res.json({ success: true });
+    req.session.destroy(() => {
+        res.json({ success: true });
+    });
 });
 
 // Start server
