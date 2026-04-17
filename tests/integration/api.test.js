@@ -391,7 +391,7 @@ describe('API Integration Tests', () => {
       expect(res.text).toMatch(/timezone|Timezone/i);
     });
 
-    test('GET /signin serves signin.html', async () => {
+    test('GET /signin serves signIn.html', async () => {
       const res = await request(app).get('/signin');
       expect(res.status).toBe(200);
       expect(res.headers['content-type']).toMatch(/html/);

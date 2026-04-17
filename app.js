@@ -66,7 +66,7 @@ function createApp(options) {
   });
 
   app.get('/signin', (req, res) => {
-    res.sendFile(path.join(viewsDir, 'signin.html'));
+    res.sendFile(path.join(viewsDir, 'signIn.html'));
   });
 
   app.get('/registration', (req, res) => {
