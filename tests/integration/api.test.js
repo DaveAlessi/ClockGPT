@@ -2,7 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const request = require('supertest');
-const { createApp } = require('../../server');
+const { createApp } = require('../../src/app');
 
 describe('API Integration Tests', () => {
   let app;

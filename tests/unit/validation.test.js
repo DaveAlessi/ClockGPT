@@ -4,7 +4,7 @@ const {
   validateRegistrationPassword,
   validateFile,
   isAuthenticated,
-} = require('../../lib/validation');
+} = require('../../src/lib/validation');
 
 describe('Validation Unit Tests', () => {
   describe('Username Validation', () => {
