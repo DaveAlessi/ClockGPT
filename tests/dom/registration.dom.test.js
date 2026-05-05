@@ -52,9 +52,15 @@ describe('public/js/registration.js', () => {
 
   test('shows success message and calls fetch on valid submit', async () => {
     setupDom();
-    global.fetch.mockResolvedValue({
-      json: async () => ({ success: true }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true }),
+      });
     require('../../public/js/registration.js');
     document.getElementById('username').value = 'validuser';
     document.getElementById('password').value = 'secret12';
@@ -64,7 +70,7 @@ describe('public/js/registration.js', () => {
       new Event('submit', { bubbles: true, cancelable: true })
     );
     await global.flushAsync();
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenNthCalledWith(2,
       '/api/registration',
       expect.objectContaining({ method: 'POST' })
     );
@@ -75,9 +81,15 @@ describe('public/js/registration.js', () => {
 
   test('shows server error message when registration fails', async () => {
     setupDom();
-    global.fetch.mockResolvedValue({
-      json: async () => ({ success: false, error: 'Username already exists' }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: false, error: 'Username already exists' }),
+      });
     require('../../public/js/registration.js');
     document.getElementById('username').value = 'validuser';
     document.getElementById('password').value = 'secret12';
