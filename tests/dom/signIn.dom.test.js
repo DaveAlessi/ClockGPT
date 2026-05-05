@@ -22,9 +22,15 @@ describe('public/js/signIn.js', () => {
 
   test('shows error message when login returns error', async () => {
     setupDom();
-    global.fetch.mockResolvedValue({
-      json: async () => ({ success: false, error: 'Invalid username or password' }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: false, error: 'Invalid username or password' }),
+      });
     require('../../public/js/signIn.js');
     document.getElementById('username').value = 'u';
     document.getElementById('password').value = 'p';
@@ -37,9 +43,15 @@ describe('public/js/signIn.js', () => {
 
   test('calls fetch with login payload', async () => {
     setupDom();
-    global.fetch.mockResolvedValue({
-      json: async () => ({ success: false, error: 'bad' }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: false, error: 'bad' }),
+      });
     require('../../public/js/signIn.js');
     document.getElementById('username').value = 'alice';
     document.getElementById('password').value = 'secret99';
@@ -47,7 +59,7 @@ describe('public/js/signIn.js', () => {
       new Event('submit', { bubbles: true, cancelable: true })
     );
     await global.flushAsync();
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenNthCalledWith(2,
       '/api/login',
       expect.objectContaining({
         method: 'POST',

@@ -24,14 +24,19 @@ describe('public/js/profile.js', () => {
 
   test('prefills form from loadUserData', async () => {
     setupDom();
-    global.fetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        name: 'Sam',
-        timezone: 'America/New_York',
-        profile_picture: '/images/x.png',
-      }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          name: 'Sam',
+          timezone: 'America/New_York',
+          profilePicture: '/images/x.png',
+        }),
+      });
     require('../../public/js/profile.js');
     await global.flushAsync();
     expect(document.getElementById('name').value).toBe('Sam');
@@ -43,9 +48,14 @@ describe('public/js/profile.js', () => {
     global.fetch
       .mockResolvedValueOnce({
         ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
         json: async () => ({ name: '', timezone: '' }),
       })
       .mockResolvedValueOnce({
+        ok: true,
         json: async () => ({ success: true }),
       });
     require('../../public/js/profile.js');
@@ -61,10 +71,15 @@ describe('public/js/profile.js', () => {
 
   test('fileInput rejects non-image files', async () => {
     setupDom();
-    global.fetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({}),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({}),
+      });
     require('../../public/js/profile.js');
     await global.flushAsync();
     const input = document.getElementById('fileInput');
@@ -73,7 +88,7 @@ describe('public/js/profile.js', () => {
     input.dispatchEvent(new Event('change', { bubbles: true }));
     await global.flushAsync();
     expect(document.getElementById('message').textContent).toBe('Please select an image file.');
-    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 
   test('logout calls POST /logout', async () => {
@@ -81,15 +96,23 @@ describe('public/js/profile.js', () => {
     global.fetch
       .mockResolvedValueOnce({
         ok: true,
+        json: async () => ({ csrfToken: 'test-csrf-token' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
         json: async () => ({}),
       })
       .mockResolvedValueOnce({
+        ok: true,
         json: async () => ({ success: true }),
       });
     require('../../public/js/profile.js');
     await global.flushAsync();
     document.getElementById('logoutBtn').click();
     await global.flushAsync();
-    expect(global.fetch).toHaveBeenLastCalledWith('/logout', { method: 'POST' });
+    expect(global.fetch).toHaveBeenLastCalledWith(
+      '/logout',
+      expect.objectContaining({ method: 'POST' })
+    );
   });
 });
