@@ -9,9 +9,9 @@ describe('API Integration Tests', () => {
   let close;
   let uploadDir;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     uploadDir = fs.mkdtempSync(path.join(os.tmpdir(), 'clockgpt-upload-'));
-    const instance = createApp({
+    const instance = await createApp({
       dbPath: ':memory:',
       sessionSecret: 'test-secret',
       cookieSecure: false,

@@ -9,7 +9,11 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "test:unit": "jest --testPathPattern=tests/unit",
-    "test:integration": "jest --testPathPattern=tests/integration"
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "migrate": "node src/scripts/migrate.js",
+    "migrate:status": "node src/scripts/migrate.js --status",
+    "seed": "node src/scripts/seed.js",
+    "seed:reset": "node src/scripts/seed.js --reset"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

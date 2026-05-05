@@ -6,6 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 const { DEFAULT_TIMEZONE } = require('./lib/constants');
 const { closeDbAsync, initializeDatabase } = require('./repositories/dbHelpers');
+const { runMigrations } = require('./migrations');
 const { createRateLimiters } = require('./middleware/rateLimits');
 const { csrfProtection } = require('./middleware/csrf');
 const { createUploadMiddleware } = require('./middleware/upload');
@@ -19,7 +20,7 @@ function parseBoolean(input, fallback) {
   return String(input).toLowerCase() === 'true';
 }
 
-function createApp(options = {}) {
+async function createApp(options = {}) {
   const app = express();
   const isProduction = process.env.NODE_ENV === 'production';
   const sessionSecret = options.sessionSecret || process.env.SESSION_SECRET || 'dev-only-secret-change-me';
@@ -35,14 +36,24 @@ function createApp(options = {}) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }
 
-  const db = options.db || new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-      console.error('Error opening database', err);
-      return;
-    }
-    console.log('Database connected');
+  // Create or use provided database
+  const db = options.db || await new Promise((resolve, reject) => {
+    const database = new sqlite3.Database(dbPath, (err) => {
+      if (err) {
+        console.error('Error opening database', err);
+        return reject(err);
+      }
+      console.log('Database connected');
+      return resolve(database);
+    });
   });
-  initializeDatabase(db);
+
+  // Run migrations (or use old initialization for backward compatibility)
+  if (options.runMigrations !== false) {
+    await runMigrations(db);
+  } else {
+    initializeDatabase(db);
+  }
 
   app.disable('x-powered-by');
   app.use(express.static('public'));
