@@ -1,6 +1,24 @@
+let csrfToken = null;
+
+async function ensureCsrfToken() {
+    if (csrfToken) {
+        return csrfToken;
+    }
+
+    const response = await fetch('/api/csrf-token');
+    if (!response.ok) {
+        throw new Error('Unable to fetch CSRF token');
+    }
+
+    const data = await response.json();
+    csrfToken = data.csrfToken;
+    return csrfToken;
+}
+
 // Load user data on page load
 async function loadUserData() {
     try {
+        await ensureCsrfToken();
         const response = await fetch('/api/user');
         
         if (!response.ok) {
@@ -34,10 +52,12 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     const timezone = document.getElementById('timezone').value;
     
     try {
+        const token = await ensureCsrfToken();
         const response = await fetch('/api/user/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'x-csrf-token': token
             },
             body: JSON.stringify({ name, timezone })
         });
@@ -77,8 +97,12 @@ document.getElementById('fileInput').addEventListener('change', async (e) => {
     formData.append('profilePicture', file);
     
     try {
+        const token = await ensureCsrfToken();
         const response = await fetch('/api/user/upload-picture', {
             method: 'POST',
+            headers: {
+                'x-csrf-token': token
+            },
             body: formData
         });
         
@@ -99,8 +123,12 @@ document.getElementById('fileInput').addEventListener('change', async (e) => {
 // Handle logout
 document.getElementById('logoutBtn').addEventListener('click', async () => {
     try {
+        const token = await ensureCsrfToken();
         const response = await fetch('/logout', {
-            method: 'POST'
+            method: 'POST',
+            headers: {
+                'x-csrf-token': token
+            }
         });
         
         const data = await response.json();
