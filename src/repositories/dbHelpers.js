@@ -16,6 +16,15 @@ function getAsync(db, sql, params = []) {
   });
 }
 
+function allAsync(db, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => {
+      if (err) return reject(err);
+      return resolve(rows || []);
+    });
+  });
+}
+
 function closeDbAsync(db) {
   return new Promise((resolve, reject) => {
     db.close((err) => {
@@ -40,6 +49,7 @@ function initializeDatabase(db) {
 module.exports = {
   runAsync,
   getAsync,
+  allAsync,
   closeDbAsync,
   initializeDatabase,
 };
