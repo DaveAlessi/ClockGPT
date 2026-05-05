@@ -27,7 +27,7 @@ Transform the app from a demo into a maintainable Node application with realisti
 - Keep migration cost manageable by shipping in phases with minimal user disruption.
 
 ## Non-goals
-- Building group chat or channels in the first release.
+- Building group chat or channels in the first release (tracked as post-MVP in Phase 6).
 - Building end-to-end encryption.
 - Migrating frontend to a full SPA framework in this phase.
 - Supporting federated auth providers (Google/GitHub) in this phase.
@@ -108,7 +108,14 @@ Transform the app from a demo into a maintainable Node application with realisti
 
 ## Implementation Plan (Phased)
 
+### Phase 0: Foundations (Linear sync)
+- [ ] Phase parent issue _(Linear: [SNY-68](https://linear.app/snyk-mlteam/issue/SNY-68/phase-0-foundations))_
+- [ ] Create `src` structure and move Express bootstrap out of root `server.js` _(Linear: [SNY-69](https://linear.app/snyk-mlteam/issue/SNY-69/phase-0-create-src-structure-and-move-express-bootstrap))_
+- [ ] Add config loader and environment validation _(Linear: [SNY-70](https://linear.app/snyk-mlteam/issue/SNY-70/phase-0-add-config-loader-and-environment-validation))_
+- [ ] Introduce shared error middleware and logger _(Linear: [SNY-41](https://linear.app/snyk-mlteam/issue/SNY-41/phase-0-introduce-shared-error-middleware-and-logger), status: In Progress)_
+
 ### Phase 1: Security and API hardening (2-3 days)
+- [x] Phase parent issue _(Linear: [SNY-66](https://linear.app/snyk-mlteam/issue/SNY-66/phase-1-security-and-api-hardening))_
 - [x] Add request validation schemas for auth/profile endpoints _(Linear: [SNY-37](https://linear.app/snyk-mlteam/issue/SNY-37/phase-1-add-request-validation-schemas-for-authprofile-endpoints))_
 - [x] Fix session defaults and cookie security options _(Linear: [SNY-42](https://linear.app/snyk-mlteam/issue/SNY-42/phase-1-fix-session-defaults-and-cookie-security-options))_
 - [x] Add rate limiting and CSRF coverage _(Linear: [SNY-43](https://linear.app/snyk-mlteam/issue/SNY-43/phase-1-add-rate-limiting-and-csrf-coverage))_
@@ -116,28 +123,35 @@ Transform the app from a demo into a maintainable Node application with realisti
 - [x] Expand integration tests for auth/profile negative cases _(Linear: [SNY-46](https://linear.app/snyk-mlteam/issue/SNY-46/phase-1-expand-integration-tests-for-authprofile-negative-cases))_
 
 ### Phase 2: Data model + migrations (1-2 days)
+- [ ] Phase parent issue _(Linear: [SNY-64](https://linear.app/snyk-mlteam/issue/SNY-64/phase-2-data-model-migrations))_
 - [ ] Add migration tooling and baseline migration from current schema _(Linear: [SNY-45](https://linear.app/snyk-mlteam/issue/SNY-45/phase-2-add-migration-tooling-and-baseline-migration-from-current))_
 - [ ] Add conversation/message tables and indexes _(Linear: [SNY-47](https://linear.app/snyk-mlteam/issue/SNY-47/phase-2-add-conversationmessage-tables-and-indexes))_
 - [ ] Create repository methods for chat queries and writes _(Linear: [SNY-48](https://linear.app/snyk-mlteam/issue/SNY-48/phase-2-create-repository-methods-for-chat-queries-and-writes))_
 - [ ] Add seed/dev helper scripts for local testing _(Linear: [SNY-51](https://linear.app/snyk-mlteam/issue/SNY-51/phase-2-add-seeddev-helper-scripts-for-local-testing))_
 
 ### Phase 3: Chat MVP backend (2-3 days)
+- [ ] Phase parent issue _(Linear: [SNY-65](https://linear.app/snyk-mlteam/issue/SNY-65/phase-3-chat-mvp-backend))_
 - [ ] Add chat REST endpoints with pagination/cursor strategy _(Linear: [SNY-50](https://linear.app/snyk-mlteam/issue/SNY-50/phase-3-add-chat-rest-endpoints-with-paginationcursor-strategy))_
 - [ ] Add socket server and authenticated connection middleware _(Linear: [SNY-49](https://linear.app/snyk-mlteam/issue/SNY-49/phase-3-add-socket-server-and-authenticated-connection-middleware))_
 - [ ] Implement message persistence and real-time fanout _(Linear: [SNY-54](https://linear.app/snyk-mlteam/issue/SNY-54/phase-3-implement-message-persistence-and-real-time-fanout))_
 - [ ] Add tests for permission boundaries (only members can read/send) _(Linear: [SNY-53](https://linear.app/snyk-mlteam/issue/SNY-53/phase-3-add-tests-for-permission-boundaries-only-members-can-readsend))_
 
 ### Phase 4: Chat MVP frontend (2-3 days)
+- [ ] Phase parent issue _(Linear: [SNY-63](https://linear.app/snyk-mlteam/issue/SNY-63/phase-4-chat-mvp-frontend))_
 - [ ] Add chat navigation and user discovery list _(Linear: [SNY-55](https://linear.app/snyk-mlteam/issue/SNY-55/phase-4-add-chat-navigation-and-user-discovery-list))_
 - [ ] Build conversation + message UI with loading/empty/error states _(Linear: [SNY-56](https://linear.app/snyk-mlteam/issue/SNY-56/phase-4-build-conversation-message-ui-with-loadingemptyerror-states))_
 - [ ] Wire real-time events and optimistic updates _(Linear: [SNY-52](https://linear.app/snyk-mlteam/issue/SNY-52/phase-4-wire-real-time-events-and-optimistic-updates))_
 - [ ] Add basic accessibility checks (focus order, labels, keyboard send) _(Linear: [SNY-57](https://linear.app/snyk-mlteam/issue/SNY-57/phase-4-add-basic-accessibility-checks-focus-order-labels-keyboard))_
 
 ### Phase 5: Stabilization and release (1-2 days)
+- [ ] Phase parent issue _(Linear: [SNY-62](https://linear.app/snyk-mlteam/issue/SNY-62/phase-5-stabilization-and-release))_
 - [ ] Add end-to-end integration path tests (auth -> chat send/receive) _(Linear: [SNY-60](https://linear.app/snyk-mlteam/issue/SNY-60/phase-5-add-end-to-end-integration-path-tests-auth-chat-sendreceive))_
 - [ ] Run security scan and resolve findings _(Linear: [SNY-59](https://linear.app/snyk-mlteam/issue/SNY-59/phase-5-run-security-scan-and-resolve-findings))_
 - [ ] Update docs (`README`, `TESTING`, architecture notes) _(Linear: [SNY-58](https://linear.app/snyk-mlteam/issue/SNY-58/phase-5-update-docs-readme-testing-architecture-notes))_
 - [ ] Execute staged rollout and monitor logs/errors _(Linear: [SNY-61](https://linear.app/snyk-mlteam/issue/SNY-61/phase-5-execute-staged-rollout-and-monitor-logserrors))_
+
+### Phase 6: Post-MVP expansion (backlog)
+- [ ] Add group chat functionality _(Linear: [SNY-67](https://linear.app/snyk-mlteam/issue/SNY-67/phase-6-add-group-chat-functionality))_
 
 ## Testing Strategy
 - **Unit tests:** services, validators, repository logic, chat permission guards.
