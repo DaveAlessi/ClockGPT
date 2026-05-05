@@ -1,7 +1,7 @@
 # ClockGPT Modernization + User Chat Spec
 
 ## Metadata
-- **Status:** In progress (Phase 1 complete)
+- **Status:** In progress (Phase 0, 1, 2 complete)
 - **Owner:** Engineering
 - **Last updated:** 2026-05-05
 - **Related project:** ClockGPT hardening and feature expansion
@@ -123,11 +123,11 @@ Transform the app from a demo into a maintainable Node application with realisti
 - [x] Expand integration tests for auth/profile negative cases _(Linear: [SNY-46](https://linear.app/snyk-mlteam/issue/SNY-46/phase-1-expand-integration-tests-for-authprofile-negative-cases))_
 
 ### Phase 2: Data model + migrations (1-2 days)
-- [ ] Phase parent issue _(Linear: [SNY-64](https://linear.app/snyk-mlteam/issue/SNY-64/phase-2-data-model-migrations))_
-- [ ] Add migration tooling and baseline migration from current schema _(Linear: [SNY-45](https://linear.app/snyk-mlteam/issue/SNY-45/phase-2-add-migration-tooling-and-baseline-migration-from-current))_
-- [ ] Add conversation/message tables and indexes _(Linear: [SNY-47](https://linear.app/snyk-mlteam/issue/SNY-47/phase-2-add-conversationmessage-tables-and-indexes))_
-- [ ] Create repository methods for chat queries and writes _(Linear: [SNY-48](https://linear.app/snyk-mlteam/issue/SNY-48/phase-2-create-repository-methods-for-chat-queries-and-writes))_
-- [ ] Add seed/dev helper scripts for local testing _(Linear: [SNY-51](https://linear.app/snyk-mlteam/issue/SNY-51/phase-2-add-seeddev-helper-scripts-for-local-testing))_
+- [x] Phase parent issue _(Linear: [SNY-64](https://linear.app/snyk-mlteam/issue/SNY-64/phase-2-data-model-migrations))_
+- [x] Add migration tooling and baseline migration from current schema _(Linear: [SNY-45](https://linear.app/snyk-mlteam/issue/SNY-45/phase-2-add-migration-tooling-and-baseline-migration-from-current))_
+- [x] Add conversation/message tables and indexes _(Linear: [SNY-47](https://linear.app/snyk-mlteam/issue/SNY-47/phase-2-add-conversationmessage-tables-and-indexes))_
+- [x] Create repository methods for chat queries and writes _(Linear: [SNY-48](https://linear.app/snyk-mlteam/issue/SNY-48/phase-2-create-repository-methods-for-chat-queries-and-writes))_
+- [x] Add seed/dev helper scripts for local testing _(Linear: [SNY-51](https://linear.app/snyk-mlteam/issue/SNY-51/phase-2-add-seeddev-helper-scripts-for-local-testing))_
 
 ### Phase 3: Chat MVP backend (2-3 days)
 - [ ] Phase parent issue _(Linear: [SNY-65](https://linear.app/snyk-mlteam/issue/SNY-65/phase-3-chat-mvp-backend))_
