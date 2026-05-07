@@ -60,6 +60,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          GEMINI_CLI_TRUST_WORKSPACE: true
         run: |
           # 1. We use --tools=all to make sure the model 'sees' the shell tool
           # 2. We use a System Instruction to force the correct tool name
