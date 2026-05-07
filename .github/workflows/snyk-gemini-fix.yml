@@ -35,9 +35,12 @@ jobs:
           # Generate JSON report for Gemini to consume
           # We use '|| true' to prevent the action from stopping here
           snyk test . >> snyk_results.json || echo "HAS_VULNS=true" >> $GITHUB_ENV
-          snyk test .
-          # snyk code test --json > snyk-code-results.json || echo "HAS_CODE_VULNS=true" >> $GITHUB_ENV
-
+      # - name: Run Snyk Scan 2
+      #   id: snyk
+      #   env:
+      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      #   run: |
+      #     snyk test .
       - name: Gemini AI Fixer
         if: env.HAS_VULNS == 'true'
         env:
