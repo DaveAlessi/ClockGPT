@@ -63,7 +63,7 @@ jobs:
         run: |
           # 1. We use --tools=all to make sure the model 'sees' the shell tool
           # 2. We use a System Instruction to force the correct tool name
-          gemini --yolo --tools=all -p "
+          gemini --yolo -p "
             SYSTEM: You are a security agent. Use 'run_shell' for terminal commands and 'edit_file' for code changes.
             
             TASK: 
