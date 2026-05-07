@@ -35,34 +35,44 @@ jobs:
         run: |
           # Generate JSON report for Gemini to consume
           # We use '|| true' to prevent the action from stopping here
-          snyk test . >> snyk_results.json || echo "HAS_VULNS=true" >> $GITHUB_ENV
-      - name: 6. Configure Gemini Policy
+          snyk test . --json > snyk_results.json || echo "HAS_VULNS=true" >> $GITHUB_ENV
+      - name: Configure Gemini Policy (FIXED)
         run: |
-          # This bypasses the interactive trust prompts in the 2026 CLI sandbox
           mkdir -p ~/.gemini
-          cat <<EOF > ~/.gemini/config.json
+          # The filename must be settings.json for the 2026 security engine
+          cat <<EOF > ~/.gemini/settings.json
           {
-            "remediation_mode": true,
-            "trust_all_tools": true,
-            "yolo": true,
-            "allowed_commands": ["snyk *", "npm *", "git *"]
+            "tools": {
+              "shell": {
+                "enabled": true,
+                "allowedCommands": ["snyk *", "npm *", "git *"]
+              },
+              "files": {
+                "enabled": true,
+                "allowedDirectories": ["./"]
+              }
+            },
+            "yolo": true
           }
           EOF
-      - name: Gemini AI Fixer
+      - name: Gemini AI Fixer (FIXED)
         if: env.HAS_VULNS == 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          # The -p flag passes the prompt. 
-          # Gemini will read the JSON files and apply fixes.
-          gemini --skip-trust -p "Analyze the security vulnerabilities in snyk_results.json.
-                     1. Identify the files and lines causing high-severity issues.
-                     2. Apply the minimum code changes required to fix these vulnerabilities.
-                     3. For dependency issues, update the manifest file (e.g., package.json). And the first party code where needed.
-                     4. After fixing, run 'snyk test .' again to verify. 
-                     If the fix fails the scan or breaks the build, try a different approach."
-
+          # 1. We use --tools=all to make sure the model 'sees' the shell tool
+          # 2. We use a System Instruction to force the correct tool name
+          gemini --yolo --tools=all -p "
+            SYSTEM: You are a security agent. Use 'run_shell' for terminal commands and 'edit_file' for code changes.
+            
+            TASK: 
+            Analyze snyk_results.json. 
+            1. For each high vulnerability, use 'run_shell' to try 'snyk fix'.
+            2. If 'snyk fix' doesn't work, use 'read_file' and 'edit_file' to patch manually.
+            3. Run 'snyk test --json' to verify the fix.
+            4. Only stop once high-severity issues are resolved.
+          "
       - name: Create Pull Request
         if: env.HAS_VULNS == 'true' || env.HAS_CODE_VULNS == 'true'
         uses: peter-evans/create-pull-request@v6
