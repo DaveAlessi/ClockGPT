@@ -24,7 +24,7 @@ jobs:
       - name: Install Snyk & Gemini CLI
         run: |
           npm install -g snyk @google/gemini-cli
-          gemini --install-plugin core-automation
+          # gemini --install-plugin core-automation
           # Optional: Configure Snyk as a tool for Gemini using MCP
           npx -y snyk@latest mcp configure --tool=gemini-cli --rule-type=smart-apply
 
